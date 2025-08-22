@@ -66,8 +66,9 @@ const isDestControlledByEnemy = (ctx: MobilityContext, pieceRolesExclude?: cg.Ro
         (piece.role === 'bishop' && util.bishopDir(...piecePos, ...square)) ||
         (piece.role === 'rook' && util.rookDir(...piecePos, ...square)) ||
         (piece.role === 'queen' && util.queenDir(...piecePos, ...square)) ||
+        (piece.role === 'knook' && util.knookDir(...piecePos, ...square)) ||
         (piece.role === 'king' && util.kingDirNonCastling(...piecePos, ...square))) &&
-      (!['bishop', 'rook', 'queen'].includes(piece.role) || !anyPieceBetween(piecePos, square, ctx.allPieces))
+      (!['bishop', 'rook', 'queen', 'knook'].includes(piece.role) || !anyPieceBetween(piecePos, square, ctx.allPieces))
     );
   });
 };
@@ -179,6 +180,11 @@ const rook: Mobility = (ctx: MobilityContext) =>
 
 const queen: Mobility = (ctx: MobilityContext) => bishop(ctx) || rook(ctx);
 
+const knook: Mobility = (ctx: MobilityContext) =>
+  util.knookDir(...ctx.pos1, ...ctx.pos2) &&
+  (ctx.unrestrictedPremoves || !isDestOccupiedByFriendly(ctx) || isFriendlyOnDestAndAttacked(ctx)) &&
+  (!util.rookDir(...ctx.pos1, ...ctx.pos2) || !anyPieceBetween(ctx.pos1, ctx.pos2, ctx.allPieces));
+
 const king: Mobility = (ctx: MobilityContext) =>
   (util.kingDirNonCastling(...ctx.pos1, ...ctx.pos2) &&
     (ctx.unrestrictedPremoves || !isDestOccupiedByFriendly(ctx) || isFriendlyOnDestAndAttacked(ctx))) ||
@@ -198,7 +204,7 @@ const king: Mobility = (ctx: MobilityContext) =>
         .map(s => ctx.allPieces.get(s))
         .every(p => !p || util.samePiece(p, { role: 'rook', color: ctx.color }))));
 
-const mobilityByRole = { pawn, knight, bishop, rook, queen, king };
+const mobilityByRole = { pawn, knight, bishop, rook, queen, knook, king };
 
 export function premove(state: HeadlessState, key: cg.Key): cg.Key[] {
   const pieces = state.pieces,

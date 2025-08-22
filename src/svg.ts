@@ -372,7 +372,7 @@ function lineWidth(brush: DrawBrush, current: boolean): number {
 
 function hiliteOf(shape: DrawShape): { key?: string; color?: string } {
   const hilite = shape.modifiers?.hilite;
-  return { key: hilite && `hilite-${hilite.replace('#', '')}`, color: hilite };
+  return { key: hilite && typeof hilite === 'string' ? `hilite-${hilite.replace('#', '')}` : undefined, color: hilite };
 }
 
 function opacity(brush: DrawBrush, current: boolean): number {

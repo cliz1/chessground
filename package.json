@@ -1,5 +1,5 @@
 {
-  "name": "@lichess-org/chessground",
+  "name": "chessground",
   "version": "9.5.1",
   "//": "version is managed by the build system",
   "description": "lichess.org chess ui",
