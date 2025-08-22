@@ -67,8 +67,10 @@ const isDestControlledByEnemy = (ctx: MobilityContext, pieceRolesExclude?: cg.Ro
         (piece.role === 'rook' && util.rookDir(...piecePos, ...square)) ||
         (piece.role === 'queen' && util.queenDir(...piecePos, ...square)) ||
         (piece.role === 'knook' && util.knookDir(...piecePos, ...square)) ||
+        (piece.role == 'knishop' && util.knishopDir(...piecePos, ...square)) ||
+        (piece.role === 'amazon' && util.amazonDir(...piecePos, ...square)) ||
         (piece.role === 'king' && util.kingDirNonCastling(...piecePos, ...square))) &&
-      (!['bishop', 'rook', 'queen', 'knook'].includes(piece.role) || !anyPieceBetween(piecePos, square, ctx.allPieces))
+      (!['bishop', 'rook', 'queen', 'knook', 'knishop'].includes(piece.role) || !anyPieceBetween(piecePos, square, ctx.allPieces))
     );
   });
 };
@@ -185,6 +187,19 @@ const knook: Mobility = (ctx: MobilityContext) =>
   (ctx.unrestrictedPremoves || !isDestOccupiedByFriendly(ctx) || isFriendlyOnDestAndAttacked(ctx)) &&
   (!util.rookDir(...ctx.pos1, ...ctx.pos2) || !anyPieceBetween(ctx.pos1, ctx.pos2, ctx.allPieces));
 
+const knishop: Mobility = (ctx: MobilityContext) =>
+util.knishopDir(...ctx.pos1, ...ctx.pos2) &&
+(ctx.unrestrictedPremoves || !isDestOccupiedByFriendly(ctx) || isFriendlyOnDestAndAttacked(ctx)) &&
+(!util.bishopDir(...ctx.pos1, ...ctx.pos2) || !anyPieceBetween(ctx.pos1, ctx.pos2, ctx.allPieces));
+
+const amazon: Mobility = (ctx: MobilityContext) =>
+  util.amazonDir(...ctx.pos1, ...ctx.pos2) &&
+  (ctx.unrestrictedPremoves || !isDestOccupiedByFriendly(ctx) || isFriendlyOnDestAndAttacked(ctx)) &&
+  (!util.rookDir(...ctx.pos1, ...ctx.pos2) ||
+    !anyPieceBetween(ctx.pos1, ctx.pos2, ctx.allPieces) ||
+    !util.bishopDir(...ctx.pos1, ...ctx.pos2) ||
+    !anyPieceBetween(ctx.pos1, ctx.pos2, ctx.allPieces));
+
 const king: Mobility = (ctx: MobilityContext) =>
   (util.kingDirNonCastling(...ctx.pos1, ...ctx.pos2) &&
     (ctx.unrestrictedPremoves || !isDestOccupiedByFriendly(ctx) || isFriendlyOnDestAndAttacked(ctx))) ||
@@ -204,7 +219,7 @@ const king: Mobility = (ctx: MobilityContext) =>
         .map(s => ctx.allPieces.get(s))
         .every(p => !p || util.samePiece(p, { role: 'rook', color: ctx.color }))));
 
-const mobilityByRole = { pawn, knight, bishop, rook, queen, knook, king };
+const mobilityByRole = { pawn, knight, bishop, rook, queen, knook, knishop, amazon, king };
 
 export function premove(state: HeadlessState, key: cg.Key): cg.Key[] {
   const pieces = state.pieces,

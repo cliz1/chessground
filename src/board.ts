@@ -9,6 +9,8 @@ import {
   queenDir,
   knightDir,
   knookDir,
+  knishopDir,
+  amazonDir,
   samePos,
 } from './util.js';
 import { premove } from './premove.js';
@@ -367,7 +369,9 @@ export function getSnappedKeyAtDomPos(
       samePos(origPos, pos2) ||
       queenDir(origPos[0], origPos[1], pos2[0], pos2[1]) ||
       knightDir(origPos[0], origPos[1], pos2[0], pos2[1]) ||
-      knookDir(origPos[0], origPos[1], pos2[0], pos2[1]),
+      knookDir(origPos[0], origPos[1], pos2[0], pos2[1]) ||
+      knishopDir(origPos[0], origPos[1], pos2[0], pos2[1]) ||
+      amazonDir(origPos[0], origPos[1], pos2[0], pos2[1]),
   );
   const validSnapCenters = validSnapPos.map(pos2 => computeSquareCenter(pos2key(pos2), asWhite, bounds));
   const validSnapDistances = validSnapCenters.map(pos2 => distanceSq(pos, pos2));
