@@ -121,6 +121,9 @@ export const knishopDir: cg.DirectionalCheck = (x1, y1, x2, y2) =>
 export const amazonDir: cg.DirectionalCheck = (x1, y1, x2, y2) =>
   knightDir(x1, y1, x2, y2) || queenDir(x1, y1, x2, y2);
 
+export const peasantDir:  cg.DirectionalCheck = (x1, y1, x2, y2) =>
+  Math.max(diff(x1, x2), diff(y1, y2)) === 1;
+
 export const kingDirNonCastling: cg.DirectionalCheck = (x1, y1, x2, y2) =>
   Math.max(diff(x1, x2), diff(y1, y2)) === 1;
 

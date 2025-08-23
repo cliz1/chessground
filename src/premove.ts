@@ -69,6 +69,7 @@ const isDestControlledByEnemy = (ctx: MobilityContext, pieceRolesExclude?: cg.Ro
         (piece.role === 'knook' && util.knookDir(...piecePos, ...square)) ||
         (piece.role == 'knishop' && util.knishopDir(...piecePos, ...square)) ||
         (piece.role === 'amazon' && util.amazonDir(...piecePos, ...square)) ||
+        (piece.role === 'peasant' && util.peasantDir(...piecePos, ...square)) ||
         (piece.role === 'king' && util.kingDirNonCastling(...piecePos, ...square))) &&
       (!['bishop', 'rook', 'queen', 'knook', 'knishop'].includes(piece.role) || !anyPieceBetween(piecePos, square, ctx.allPieces))
     );
@@ -200,6 +201,10 @@ const amazon: Mobility = (ctx: MobilityContext) =>
     !util.bishopDir(...ctx.pos1, ...ctx.pos2) ||
     !anyPieceBetween(ctx.pos1, ctx.pos2, ctx.allPieces));
 
+const peasant: Mobility = (ctx: MobilityContext) =>
+  util.peasantDir(...ctx.pos1, ...ctx.pos2) &&
+  (ctx.unrestrictedPremoves || !isDestOccupiedByFriendly(ctx) || isFriendlyOnDestAndAttacked(ctx));
+
 const king: Mobility = (ctx: MobilityContext) =>
   (util.kingDirNonCastling(...ctx.pos1, ...ctx.pos2) &&
     (ctx.unrestrictedPremoves || !isDestOccupiedByFriendly(ctx) || isFriendlyOnDestAndAttacked(ctx))) ||
@@ -219,7 +224,7 @@ const king: Mobility = (ctx: MobilityContext) =>
         .map(s => ctx.allPieces.get(s))
         .every(p => !p || util.samePiece(p, { role: 'rook', color: ctx.color }))));
 
-const mobilityByRole = { pawn, knight, bishop, rook, queen, knook, knishop, amazon, king };
+const mobilityByRole = { pawn, knight, bishop, rook, queen, knook, knishop, amazon, king, peasant };
 
 export function premove(state: HeadlessState, key: cg.Key): cg.Key[] {
   const pieces = state.pieces,
