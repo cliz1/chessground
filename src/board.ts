@@ -371,7 +371,7 @@ export function getSnappedKeyAtDomPos(
       knightDir(origPos[0], origPos[1], pos2[0], pos2[1]) ||
       knookDir(origPos[0], origPos[1], pos2[0], pos2[1]) ||
       knishopDir(origPos[0], origPos[1], pos2[0], pos2[1]) ||
-      amazonDir(origPos[0], origPos[1], pos2[0], pos2[1]),
+      amazonDir(origPos[0], origPos[1], pos2[0], pos2[1])
   );
   const validSnapCenters = validSnapPos.map(pos2 => computeSquareCenter(pos2key(pos2), asWhite, bounds));
   const validSnapDistances = validSnapCenters.map(pos2 => distanceSq(pos, pos2));

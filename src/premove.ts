@@ -61,7 +61,7 @@ const isDestControlledByEnemy = (ctx: MobilityContext, pieceRolesExclude?: cg.Ro
     const piecePos = util.key2pos(key);
     return (
       !pieceRolesExclude?.includes(piece.role) &&
-      ((piece.role === 'pawn' && util.pawnDirCapture(...piecePos, ...square, piece.color === 'white')) ||
+      (((piece.role === 'pawn' || piece.role === 'painter') && util.pawnDirCapture(...piecePos, ...square, piece.color === 'white')) ||
         (piece.role === 'knight' && util.knightDir(...piecePos, ...square)) ||
         (piece.role === 'bishop' && util.bishopDir(...piecePos, ...square)) ||
         (piece.role === 'rook' && util.rookDir(...piecePos, ...square)) ||
@@ -205,6 +205,17 @@ const peasant: Mobility = (ctx: MobilityContext) =>
   util.peasantDir(...ctx.pos1, ...ctx.pos2) &&
   (ctx.unrestrictedPremoves || !isDestOccupiedByFriendly(ctx) || isFriendlyOnDestAndAttacked(ctx));
 
+const painter: Mobility = (ctx: MobilityContext) => {
+  // Same logic as pawn movement without diagonal captures
+  if (!util.diff(ctx.pos1[0], ctx.pos2[0])) {
+    return (
+      util.pawnDirAdvance(...ctx.pos1, ...ctx.pos2, ctx.color === 'white') &&
+      isPathClearEnoughForPremove({ ...ctx, pos2: [ctx.pos2[0], ctx.pos2[1] + (ctx.color === 'white' ? 1 : -1)] })
+    );
+  }
+  return false; // No diagonal painting in premove
+};
+
 const king: Mobility = (ctx: MobilityContext) =>
   (util.kingDirNonCastling(...ctx.pos1, ...ctx.pos2) &&
     (ctx.unrestrictedPremoves || !isDestOccupiedByFriendly(ctx) || isFriendlyOnDestAndAttacked(ctx))) ||
@@ -224,7 +235,7 @@ const king: Mobility = (ctx: MobilityContext) =>
         .map(s => ctx.allPieces.get(s))
         .every(p => !p || util.samePiece(p, { role: 'rook', color: ctx.color }))));
 
-const mobilityByRole = { pawn, knight, bishop, rook, queen, knook, knishop, amazon, king, peasant };
+const mobilityByRole = { pawn, knight, bishop, rook, queen, knook, knishop, amazon, king, peasant, painter };
 
 export function premove(state: HeadlessState, key: cg.Key): cg.Key[] {
   const pieces = state.pieces,

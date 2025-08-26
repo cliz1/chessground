@@ -140,6 +140,19 @@ export const pawnDirAdvance = (x1: number, y1: number, x2: number, y2: number, i
   );
 };
 
+export const painterDirCapture = (x1: number, y1: number, x2: number, y2: number, isDirectionUp: boolean) =>
+  diff(x1, x2) === 1 && y2 === y1 + (isDirectionUp ? 1 : -1);
+
+export const painterDirAdvance = (x1: number, y1: number, x2: number, y2: number, isDirectionUp: boolean) => {
+  const step = isDirectionUp ? 1 : -1;
+  return (
+    x1 === x2 &&
+    (y2 === y1 + step ||
+      // allow 2 squares from first two ranks, for horde
+      (y2 === y1 + 2 * step && (isDirectionUp ? y1 <= 1 : y1 >= 6)))
+  );
+};
+
 /** Returns all board squares between (x1, y1) and (x2, y2) exclusive,
  *  along a straight line (rook or bishop path). Returns [] if not aligned, or none between.
  */
