@@ -153,6 +153,39 @@ export const painterDirAdvance = (x1: number, y1: number, x2: number, y2: number
   );
 };
 
+// overloads
+export function snareDir(x1: number, y1: number, x2: number, y2: number): boolean;
+export function snareDir(
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+  isDirectionUp: boolean,
+  ...rest: any[]
+): boolean;
+
+// implementation
+export function snareDir(
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+  isDirectionUp?: boolean,
+  ..._rest: any[]
+): boolean {
+  // Treat undefined as "up" (you can invert default if you prefer)
+  const step = isDirectionUp === false ? -1 : 1;
+
+  // Forward orthogonal
+  const forwardOrthogonal = x1 === x2 && y2 === y1 + step;
+
+  // Forward diagonals
+  const forwardDiagonal = Math.abs(x2 - x1) === 1 && y2 === y1 + step;
+
+  return forwardOrthogonal || forwardDiagonal;
+}
+
+
 /** Returns all board squares between (x1, y1) and (x2, y2) exclusive,
  *  along a straight line (rook or bishop path). Returns [] if not aligned, or none between.
  */

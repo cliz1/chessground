@@ -70,6 +70,7 @@ const isDestControlledByEnemy = (ctx: MobilityContext, pieceRolesExclude?: cg.Ro
         (piece.role == 'knishop' && util.knishopDir(...piecePos, ...square)) ||
         (piece.role === 'amazon' && util.amazonDir(...piecePos, ...square)) ||
         (piece.role === 'peasant' && util.peasantDir(...piecePos, ...square)) ||
+        (piece.role === 'snare' && util.snareDir(...piecePos, ...square, piece.color === 'white') &&!ctx.allPieces.has(util.pos2key(square))) ||
         (piece.role === 'king' && util.kingDirNonCastling(...piecePos, ...square))) &&
       (!['bishop', 'rook', 'queen', 'knook', 'knishop'].includes(piece.role) || !anyPieceBetween(piecePos, square, ctx.allPieces))
     );
@@ -216,6 +217,15 @@ const painter: Mobility = (ctx: MobilityContext) => {
   return false; // No diagonal painting in premove
 };
 
+const snare: Mobility = (ctx: MobilityContext) => {
+  const destKey = util.pos2key(ctx.pos2);
+  return (
+    util.snareDir(...ctx.pos1, ...ctx.pos2, ctx.color === 'white') &&
+    !ctx.allPieces.has(destKey)
+  );
+};
+
+
 const king: Mobility = (ctx: MobilityContext) =>
   (util.kingDirNonCastling(...ctx.pos1, ...ctx.pos2) &&
     (ctx.unrestrictedPremoves || !isDestOccupiedByFriendly(ctx) || isFriendlyOnDestAndAttacked(ctx))) ||
@@ -235,7 +245,7 @@ const king: Mobility = (ctx: MobilityContext) =>
         .map(s => ctx.allPieces.get(s))
         .every(p => !p || util.samePiece(p, { role: 'rook', color: ctx.color }))));
 
-const mobilityByRole = { pawn, knight, bishop, rook, queen, knook, knishop, amazon, king, peasant, painter };
+const mobilityByRole = { pawn, knight, bishop, rook, queen, knook, knishop, amazon, king, peasant, painter, snare };
 
 export function premove(state: HeadlessState, key: cg.Key): cg.Key[] {
   const pieces = state.pieces,
