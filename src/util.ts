@@ -194,6 +194,9 @@ export const wizardDir: cg.DirectionalCheck = (x1, y1, x2, y2) => {
   return false;
 };
 
+export function archerDir(x1: number, y1: number, x2: number, y2: number): boolean {
+  return Math.abs(x2 - x1) === 1 && Math.abs(y2 - y1) === 1;
+}
 
 /** Returns all board squares between (x1, y1) and (x2, y2) exclusive,
  *  along a straight line (rook or bishop path). Returns [] if not aligned, or none between.

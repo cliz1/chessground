@@ -214,7 +214,7 @@ const painter: Mobility = (ctx: MobilityContext) => {
       isPathClearEnoughForPremove({ ...ctx, pos2: [ctx.pos2[0], ctx.pos2[1] + (ctx.color === 'white' ? 1 : -1)] })
     );
   }
-  return false; // No diagonal painting in premove
+  return false;
 };
 
 const snare: Mobility = (ctx: MobilityContext) => {
@@ -231,6 +231,11 @@ const wizard: Mobility = (ctx: MobilityContext) =>
     !isDestOccupiedByFriendly(ctx) ||
     isFriendlyOnDestAndAttacked(ctx));
 
+
+const archer: Mobility = (ctx: MobilityContext) =>
+  util.archerDir(...ctx.pos1, ...ctx.pos2) && 
+  isPathClearEnoughForPremove(ctx) && // should always true for 1-step
+  (ctx.unrestrictedPremoves || !isDestOccupiedByFriendly(ctx) || isFriendlyOnDestAndAttacked(ctx));
 
 
 const king: Mobility = (ctx: MobilityContext) =>
@@ -252,7 +257,7 @@ const king: Mobility = (ctx: MobilityContext) =>
         .map(s => ctx.allPieces.get(s))
         .every(p => !p || util.samePiece(p, { role: 'rook', color: ctx.color }))));
 
-const mobilityByRole = { pawn, knight, bishop, rook, queen, knook, knishop, amazon, king, peasant, painter, snare, wizard };
+const mobilityByRole = { pawn, knight, bishop, rook, queen, knook, knishop, amazon, king, peasant, painter, snare, wizard, archer };
 
 export function premove(state: HeadlessState, key: cg.Key): cg.Key[] {
   const pieces = state.pieces,

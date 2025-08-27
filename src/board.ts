@@ -13,7 +13,8 @@ import {
   amazonDir,
   samePos,
   snareDir,
-  wizardDir
+  wizardDir,
+  archerDir
 } from './util.js';
 import { premove } from './premove.js';
 import * as cg from './types.js';
@@ -375,7 +376,8 @@ export function getSnappedKeyAtDomPos(
       knishopDir(origPos[0], origPos[1], pos2[0], pos2[1]) ||
       amazonDir(origPos[0], origPos[1], pos2[0], pos2[1]) ||
       snareDir(origPos[0], origPos[1], pos2[0], pos2[1], asWhite) ||
-      wizardDir(origPos[0], origPos[1], pos2[0], pos2[1])
+      wizardDir(origPos[0], origPos[1], pos2[0], pos2[1]) ||
+      archerDir(origPos[0], origPos[1], pos2[0], pos2[1])
   );
   const validSnapCenters = validSnapPos.map(pos2 => computeSquareCenter(pos2key(pos2), asWhite, bounds));
   const validSnapDistances = validSnapCenters.map(pos2 => distanceSq(pos, pos2));
