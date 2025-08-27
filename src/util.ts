@@ -185,6 +185,15 @@ export function snareDir(
   return forwardOrthogonal || forwardDiagonal;
 }
 
+export const wizardDir: cg.DirectionalCheck = (x1, y1, x2, y2) => {
+  const dx = diff(x1, x2);
+  const dy = diff(y1, y2);
+  // Must be strictly orthogonal
+  if (dx === 0 && dy > 0 && dy <= 2) return true;
+  if (dy === 0 && dx > 0 && dx <= 2) return true;
+  return false;
+};
+
 
 /** Returns all board squares between (x1, y1) and (x2, y2) exclusive,
  *  along a straight line (rook or bishop path). Returns [] if not aligned, or none between.

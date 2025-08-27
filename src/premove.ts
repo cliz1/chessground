@@ -225,6 +225,13 @@ const snare: Mobility = (ctx: MobilityContext) => {
   );
 };
 
+const wizard: Mobility = (ctx: MobilityContext) =>
+  util.wizardDir(...ctx.pos1, ...ctx.pos2) &&
+  (ctx.unrestrictedPremoves ||
+    !isDestOccupiedByFriendly(ctx) ||
+    isFriendlyOnDestAndAttacked(ctx));
+
+
 
 const king: Mobility = (ctx: MobilityContext) =>
   (util.kingDirNonCastling(...ctx.pos1, ...ctx.pos2) &&
@@ -245,7 +252,7 @@ const king: Mobility = (ctx: MobilityContext) =>
         .map(s => ctx.allPieces.get(s))
         .every(p => !p || util.samePiece(p, { role: 'rook', color: ctx.color }))));
 
-const mobilityByRole = { pawn, knight, bishop, rook, queen, knook, knishop, amazon, king, peasant, painter, snare };
+const mobilityByRole = { pawn, knight, bishop, rook, queen, knook, knishop, amazon, king, peasant, painter, snare, wizard };
 
 export function premove(state: HeadlessState, key: cg.Key): cg.Key[] {
   const pieces = state.pieces,
