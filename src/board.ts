@@ -117,8 +117,43 @@ export function baseMove(state: HeadlessState, orig: cg.Key, dest: cg.Key): cg.P
     destPiece = state.pieces.get(dest);
   if (orig === dest || !origPiece) return false;
   const captured = destPiece && destPiece.color !== origPiece.color ? destPiece : undefined;
+
   if (dest === state.selected) unselect(state);
   callUserFunction(state.events.move, orig, dest, captured);
+
+  // --- special-case: archer capture that SHOULD NOT move the archer piece visually ---
+  // detect archer special-capture: diagonal > 1 and destination contains enemy piece
+  if (
+    origPiece.role === 'archer' &&
+    captured && 
+    (() => {
+      const o = key2pos(orig);
+      const d = key2pos(dest);
+      const fileDelta = Math.abs(d[0] - o[0]);
+      const rankDelta = Math.abs(d[1] - o[1]);
+      const maxDelta = Math.max(fileDelta, rankDelta);
+      return maxDelta > 1 && fileDelta === rankDelta; 
+    })()
+  ) {
+    // Instruct animator to skip animating the archer at `orig`
+    (state.animation as any).skipAnims = new Set([orig]);
+
+    // Remove the captured piece at dest, but keep the archer at orig (no set(dest, origPiece))
+    state.pieces.delete(dest);
+
+    // Do not move origPiece to dest; keep it at orig.
+    // Optionally ensure origPiece is set (in case other code expects a set)
+    state.pieces.set(orig, origPiece);
+
+    // set lastMove for UI bookkeeping (keep orig->dest so highlights still reflect the move)
+    state.lastMove = [orig, dest];
+    state.check = undefined;
+    callUserFunction(state.events.change);
+
+    return captured || true;
+  }
+  // --- end special-case ---
+
   if (!tryAutoCastle(state, orig, dest)) {
     state.pieces.set(dest, origPiece);
     state.pieces.delete(orig);
@@ -128,6 +163,7 @@ export function baseMove(state: HeadlessState, orig: cg.Key, dest: cg.Key): cg.P
   callUserFunction(state.events.change);
   return captured || true;
 }
+
 
 export function baseNewPiece(state: HeadlessState, piece: cg.Piece, key: cg.Key, force?: boolean): boolean {
   if (state.pieces.has(key)) {

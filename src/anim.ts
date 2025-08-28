@@ -52,9 +52,8 @@ function computePlan(prevPieces: cg.Pieces, current: State): AnimPlan {
   const anims: AnimVectors = new Map(),
     animedOrigs: cg.Key[] = [],
     fadings: AnimFadings = new Map(),
-    missings: AnimPiece[] = [],
-    news: AnimPiece[] = [],
     prePieces: AnimPieces = new Map();
+  let missings: AnimPiece[] = [], news: AnimPiece[] = [];
   let curP: cg.Piece | undefined, preP: AnimPiece | undefined, vector: cg.NumberPair;
   for (const [k, p] of prevPieces) {
     prePieces.set(k, makePiece(k, p));
@@ -71,6 +70,18 @@ function computePlan(prevPieces: cg.Pieces, current: State): AnimPlan {
       } else news.push(makePiece(key, curP));
     } else if (preP) missings.push(preP);
   }
+  // --- start: skip animation for keys provided by mutation (e.g. archer special-capture)
+  // state.animation.skipAnims may be set (by the move mutation) to a Set<cg.Key>
+  const skip = (current.animation as any)?.skipAnims as Set<cg.Key> | undefined;
+  if (skip && skip.size) {
+    // remove any news/missing entries for those keys so they won't be animated
+    news = news.filter(n => !skip.has(n.key));
+    missings = missings.filter(m => !skip.has(m.key));
+    // clear the skip set so it won't affect the next mutation
+    (current.animation as any).skipAnims = undefined;
+  }
+  // --- end: skip animation
+
   for (const newP of news) {
     preP = closer(
       newP,
