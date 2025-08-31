@@ -10,14 +10,14 @@ const roles: { [letter: string]: cg.Role } = {
   b: 'bishop',
   q: 'queen',
   k: 'king',
-  h: 'knook',
-  i: 'knishop',
+  c: 'champion',
+  i: 'princess',
   a: 'amazon',
-  m: 'peasant',
+  m: 'commoner',
   y: 'painter',
   s: 'snare',
   w: 'wizard',
-  c: 'archer'
+  x: 'archer'
 };
 
 const letters = {
@@ -27,14 +27,14 @@ const letters = {
   bishop: 'b',
   queen: 'q',
   king: 'k',
-  knook: 'h',
-  knishop: 'i',
+  champion: 'c',
+  princess: 'i',
   amazon: 'a',
-  peasant: 'm',
+  commoner: 'm',
   painter: 'y',
   snare: 's',
   wizard: 'w',
-  archer: 'c'
+  archer: 'x'
 };
 
 export function read(fen: cg.FEN): cg.Pieces {

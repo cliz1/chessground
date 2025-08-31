@@ -8,8 +8,8 @@ import {
   computeSquareCenter,
   queenDir,
   knightDir,
-  knookDir,
-  knishopDir,
+  championDir,
+  princessDir,
   amazonDir,
   samePos,
   snareDir,
@@ -408,8 +408,8 @@ export function getSnappedKeyAtDomPos(
       samePos(origPos, pos2) ||
       queenDir(origPos[0], origPos[1], pos2[0], pos2[1]) ||
       knightDir(origPos[0], origPos[1], pos2[0], pos2[1]) ||
-      knookDir(origPos[0], origPos[1], pos2[0], pos2[1]) ||
-      knishopDir(origPos[0], origPos[1], pos2[0], pos2[1]) ||
+      championDir(origPos[0], origPos[1], pos2[0], pos2[1]) ||
+      princessDir(origPos[0], origPos[1], pos2[0], pos2[1]) ||
       amazonDir(origPos[0], origPos[1], pos2[0], pos2[1]) ||
       snareDir(origPos[0], origPos[1], pos2[0], pos2[1], asWhite) ||
       wizardDir(origPos[0], origPos[1], pos2[0], pos2[1]) ||
