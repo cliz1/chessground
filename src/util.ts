@@ -173,7 +173,7 @@ export function snareDir(
   isDirectionUp?: boolean,
   ..._rest: any[]
 ): boolean {
-  // Treat undefined as "up" (you can invert default if you prefer)
+  // Treat undefined as "up"
   const step = isDirectionUp === false ? -1 : 1;
 
   // Forward orthogonal

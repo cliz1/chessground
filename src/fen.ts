@@ -18,7 +18,8 @@ const roles: { [letter: string]: cg.Role } = {
   s: 'snare',
   w: 'wizard',
   x: 'archer',
-  o: 'royalpainter'
+  o: 'royalpainter',
+  l: 'rollingsnare'
 };
 
 const letters = {
@@ -36,7 +37,8 @@ const letters = {
   snare: 's',
   wizard: 'w',
   archer: 'x',
-  royalpainter: 'o'
+  royalpainter: 'o',
+  rollingsnare: 'l'
 };
 
 export function read(fen: cg.FEN): cg.Pieces {

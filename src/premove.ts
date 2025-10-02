@@ -70,7 +70,10 @@ const isDestControlledByEnemy = (ctx: MobilityContext, pieceRolesExclude?: cg.Ro
         (piece.role == 'princess' && util.princessDir(...piecePos, ...square)) ||
         (piece.role === 'amazon' && util.amazonDir(...piecePos, ...square)) ||
         (piece.role === 'commoner' && util.commonerDir(...piecePos, ...square)) ||
+        (piece.role === 'wizard' && util.wizardDir(...piecePos, ...square)) || 
         (piece.role === 'royalpainter' && util.commonerDir(...piecePos, ...square)) ||
+        (piece.role === 'rollingsnare' && 
+        (util.kingDirNonCastling(...piecePos, ...square) || util.wizardDir(...piecePos, ...square))) ||
         (piece.role === 'snare' && util.snareDir(...piecePos, ...square, piece.color === 'white') &&!ctx.allPieces.has(util.pos2key(square))) ||
         (piece.role === 'king' && util.kingDirNonCastling(...piecePos, ...square))) &&
       (!['bishop', 'rook', 'queen', 'champion', 'princess'].includes(piece.role) || !anyPieceBetween(piecePos, square, ctx.allPieces))
@@ -230,6 +233,13 @@ const snare: Mobility = (ctx: MobilityContext) => {
   );
 };
 
+const rollingsnare: Mobility = (ctx: MobilityContext) =>
+  (util.kingDirNonCastling(...ctx.pos1, ...ctx.pos2) ||
+   util.wizardDir(...ctx.pos1, ...ctx.pos2)) &&
+  (ctx.unrestrictedPremoves ||
+    !isDestOccupiedByFriendly(ctx) ||
+    isFriendlyOnDestAndAttacked(ctx));
+
 const wizard: Mobility = (ctx: MobilityContext) =>
   util.wizardDir(...ctx.pos1, ...ctx.pos2) &&
   (ctx.unrestrictedPremoves ||
@@ -262,7 +272,7 @@ const king: Mobility = (ctx: MobilityContext) =>
         .map(s => ctx.allPieces.get(s))
         .every(p => !p || util.samePiece(p, { role: 'rook', color: ctx.color }))));
 
-const mobilityByRole = { pawn, knight, bishop, rook, queen, champion, princess, amazon, king, commoner, painter, snare, wizard, archer, royalpainter };
+const mobilityByRole = { pawn, knight, bishop, rook, queen, champion, princess, amazon, king, commoner, painter, snare, wizard, archer, royalpainter, rollingsnare };
 
 export function premove(state: HeadlessState, key: cg.Key): cg.Key[] {
   const pieces = state.pieces,
