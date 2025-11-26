@@ -69,9 +69,9 @@ const isDestControlledByEnemy = (ctx: MobilityContext, pieceRolesExclude?: cg.Ro
         (piece.role === 'champion' && util.championDir(...piecePos, ...square)) ||
         (piece.role == 'princess' && util.princessDir(...piecePos, ...square)) ||
         (piece.role === 'amazon' && util.amazonDir(...piecePos, ...square)) ||
-        (piece.role === 'commoner' && util.commonerDir(...piecePos, ...square)) ||
+        (piece.role === 'mann' && util.mannDir(...piecePos, ...square)) ||
         (piece.role === 'wizard' && util.wizardDir(...piecePos, ...square)) || 
-        (piece.role === 'royalpainter' && util.commonerDir(...piecePos, ...square)) ||
+        (piece.role === 'royalpainter' && util.mannDir(...piecePos, ...square)) ||
         (piece.role === 'rollingsnare' && 
         (util.kingDirNonCastling(...piecePos, ...square) || util.wizardDir(...piecePos, ...square))) ||
         (piece.role === 'snare' && util.snareDir(...piecePos, ...square, piece.color === 'white') &&!ctx.allPieces.has(util.pos2key(square))) ||
@@ -206,12 +206,12 @@ const amazon: Mobility = (ctx: MobilityContext) =>
     !util.bishopDir(...ctx.pos1, ...ctx.pos2) ||
     !anyPieceBetween(ctx.pos1, ctx.pos2, ctx.allPieces));
 
-const commoner: Mobility = (ctx: MobilityContext) =>
-  util.commonerDir(...ctx.pos1, ...ctx.pos2) &&
+const mann: Mobility = (ctx: MobilityContext) =>
+  util.mannDir(...ctx.pos1, ...ctx.pos2) &&
   (ctx.unrestrictedPremoves || !isDestOccupiedByFriendly(ctx) || isFriendlyOnDestAndAttacked(ctx));
 
 const royalpainter: Mobility = (ctx: MobilityContext) =>
-  util.commonerDir(...ctx.pos1, ...ctx.pos2) &&
+  util.mannDir(...ctx.pos1, ...ctx.pos2) &&
   (ctx.unrestrictedPremoves || !isDestOccupiedByFriendly(ctx) || isFriendlyOnDestAndAttacked(ctx));
 
 const painter: Mobility = (ctx: MobilityContext) => {
@@ -272,7 +272,7 @@ const king: Mobility = (ctx: MobilityContext) =>
         .map(s => ctx.allPieces.get(s))
         .every(p => !p || util.samePiece(p, { role: 'rook', color: ctx.color }))));
 
-const mobilityByRole = { pawn, knight, bishop, rook, queen, champion, princess, amazon, king, commoner, painter, snare, wizard, archer, royalpainter, rollingsnare };
+const mobilityByRole = { pawn, knight, bishop, rook, queen, champion, princess, amazon, king, mann, painter, snare, wizard, archer, royalpainter, rollingsnare };
 
 export function premove(state: HeadlessState, key: cg.Key): cg.Key[] {
   const pieces = state.pieces,
