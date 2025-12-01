@@ -71,7 +71,7 @@ const isDestControlledByEnemy = (ctx: MobilityContext, pieceRolesExclude?: cg.Ro
         (piece.role === 'amazon' && util.amazonDir(...piecePos, ...square)) ||
         (piece.role === 'mann' && util.mannDir(...piecePos, ...square)) ||
         (piece.role === 'wizard' && util.wizardDir(...piecePos, ...square)) || 
-        (piece.role === 'royalpainter' && util.mannDir(...piecePos, ...square)) ||
+        (piece.role === 'royalpainter' && util.queenDir(...piecePos, ...square)) ||
         (piece.role === 'rollingsnare' && 
         (util.kingDirNonCastling(...piecePos, ...square) || util.wizardDir(...piecePos, ...square))) ||
         (piece.role === 'snare' && util.snareDir(...piecePos, ...square, piece.color === 'white') &&!ctx.allPieces.has(util.pos2key(square))) ||
@@ -210,9 +210,7 @@ const mann: Mobility = (ctx: MobilityContext) =>
   util.mannDir(...ctx.pos1, ...ctx.pos2) &&
   (ctx.unrestrictedPremoves || !isDestOccupiedByFriendly(ctx) || isFriendlyOnDestAndAttacked(ctx));
 
-const royalpainter: Mobility = (ctx: MobilityContext) =>
-  util.mannDir(...ctx.pos1, ...ctx.pos2) &&
-  (ctx.unrestrictedPremoves || !isDestOccupiedByFriendly(ctx) || isFriendlyOnDestAndAttacked(ctx));
+const royalpainter: Mobility = (ctx: MobilityContext) => bishop(ctx) || rook(ctx);
 
 const painter: Mobility = (ctx: MobilityContext) => {
   // Same logic as pawn movement without diagonal captures
