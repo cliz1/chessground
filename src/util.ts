@@ -188,11 +188,17 @@ export function snareDir(
 export const wizardDir: cg.DirectionalCheck = (x1, y1, x2, y2) => {
   const dx = diff(x1, x2);
   const dy = diff(y1, y2);
-  // Must be strictly orthogonal
+
+  // Orthogonal: up to 2 squares
   if (dx === 0 && dy > 0 && dy <= 2) return true;
   if (dy === 0 && dx > 0 && dx <= 2) return true;
+
+  // Diagonal: must move the same amount in both axes, up to 2 squares
+  if (dx === dy && dx > 0 && dx <= 2) return true;
+
   return false;
 };
+
 
 export function archerDir(x1: number, y1: number, x2: number, y2: number): boolean {
   return Math.abs(x2 - x1) === 1 && Math.abs(y2 - y1) === 1;

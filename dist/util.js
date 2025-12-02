@@ -122,10 +122,13 @@ export function snareDir(x1, y1, x2, y2, isDirectionUp, ..._rest) {
 export const wizardDir = (x1, y1, x2, y2) => {
     const dx = diff(x1, x2);
     const dy = diff(y1, y2);
-    // Must be strictly orthogonal
+    // Orthogonal: up to 2 squares
     if (dx === 0 && dy > 0 && dy <= 2)
         return true;
     if (dy === 0 && dx > 0 && dx <= 2)
+        return true;
+    // Diagonal: must move the same amount in both axes, up to 2 squares
+    if (dx === dy && dx > 0 && dx <= 2)
         return true;
     return false;
 };
