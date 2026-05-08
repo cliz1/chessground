@@ -36,11 +36,10 @@ const isDestControlledByEnemy = (ctx, pieceRolesExclude) => {
                 (piece.role === 'mann' && util.mannDir(...piecePos, ...square)) ||
                 (piece.role === 'wizard' && util.wizardDir(...piecePos, ...square)) ||
                 (piece.role === 'royalpainter' && util.queenDir(...piecePos, ...square)) ||
-                (piece.role === 'rollingsnare' &&
-                    (util.kingDirNonCastling(...piecePos, ...square) || util.wizardDir(...piecePos, ...square))) ||
+                (piece.role === 'rollingsnare' && util.queenDir(...piecePos, ...square)) ||
                 (piece.role === 'snare' && util.snareDir(...piecePos, ...square, piece.color === 'white') && !ctx.allPieces.has(util.pos2key(square))) ||
                 (piece.role === 'king' && util.kingDirNonCastling(...piecePos, ...square))) &&
-            (!['bishop', 'rook', 'queen', 'champion', 'princess'].includes(piece.role) || !anyPieceBetween(piecePos, square, ctx.allPieces)));
+            (!['bishop', 'rook', 'queen', 'champion', 'princess', 'rollingsnare'].includes(piece.role) || !anyPieceBetween(piecePos, square, ctx.allPieces)));
     });
 };
 const isFriendlyOnDestAndAttacked = (ctx) => isDestOccupiedByFriendly(ctx) &&
@@ -145,8 +144,8 @@ const snare = (ctx) => {
     return (util.snareDir(...ctx.pos1, ...ctx.pos2, ctx.color === 'white') &&
         !ctx.allPieces.has(destKey));
 };
-const rollingsnare = (ctx) => (util.kingDirNonCastling(...ctx.pos1, ...ctx.pos2) ||
-    util.wizardDir(...ctx.pos1, ...ctx.pos2)) &&
+const rollingsnare = (ctx) => util.queenDir(...ctx.pos1, ...ctx.pos2) &&
+    isPathClearEnoughForPremove(ctx) &&
     (ctx.unrestrictedPremoves ||
         !isDestOccupiedByFriendly(ctx) ||
         isFriendlyOnDestAndAttacked(ctx));
