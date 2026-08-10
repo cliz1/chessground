@@ -218,7 +218,7 @@ export function selectSquare(state, key, force) {
         }
     }
     if ((state.selectable.enabled || state.draggable.enabled) &&
-        (isMovable(state, key) || isPremovable(state, key))) {
+        (isMovable(state, key) || isPremovable(state, key) || isInspectable(state, key))) {
         setSelected(state, key);
         state.hold.start();
     }
@@ -230,10 +230,18 @@ export function setSelected(state, key) {
     else if (!state.premovable.customDests)
         state.premovable.dests = premove(state, key);
     // calculate chess premoves if custom premoves are not passed
+    // Inspecting a piece that isn't yours (e.g. the opponent's) shows the same shape-based
+    // dests as a premove, but purely for viewing: there is no commit path for these, see
+    // isInspectable/canPremove below, so clicking one is always inert.
+    if (!isInspectable(state, key))
+        state.inspectable.dests = undefined;
+    else
+        state.inspectable.dests = premove(state, key, { ignoreTurn: true });
 }
 export function unselect(state) {
     state.selected = undefined;
     state.premovable.dests = undefined;
+    state.inspectable.dests = undefined;
     state.hold.cancel();
 }
 function isMovable(state, orig) {
@@ -262,6 +270,15 @@ function isPremovable(state, orig) {
 const canPremove = (state, orig, dest) => orig !== dest &&
     isPremovable(state, orig) &&
     (state.premovable.customDests?.get(orig) ?? premove(state, orig)).includes(dest);
+// A piece is inspectable when it isn't one the local player controls (e.g. the opponent's,
+// or a spectator viewing either side). Deliberately independent of isPremovable/canPremove:
+// there is no "canInspect"-style commit check anywhere, so a click on an inspected dest
+// square can never set a premove or otherwise act on it — it only ever falls through to
+// unselect() in userMove.
+function isInspectable(state, orig) {
+    const piece = state.pieces.get(orig);
+    return !!piece && state.inspectable.enabled && state.movable.color !== piece.color;
+}
 function canPredrop(state, orig, dest) {
     const piece = state.pieces.get(orig);
     const destPiece = state.pieces.get(dest);

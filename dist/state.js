@@ -36,6 +36,9 @@ export function defaults() {
             castle: true,
             events: {},
         },
+        inspectable: {
+            enabled: false,
+        },
         predroppable: {
             enabled: false,
             events: {},

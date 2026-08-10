@@ -49,6 +49,9 @@ export interface Config {
             unset?: () => void;
         };
     };
+    inspectable?: {
+        enabled?: boolean;
+    };
     predroppable?: {
         enabled?: boolean;
         events?: {

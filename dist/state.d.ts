@@ -54,6 +54,10 @@ export interface HeadlessState {
             unset?: () => void;
         };
     };
+    inspectable: {
+        enabled: boolean;
+        dests?: cg.Key[];
+    };
     predroppable: {
         enabled: boolean;
         current?: {

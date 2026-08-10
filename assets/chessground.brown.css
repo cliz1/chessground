@@ -11,17 +11,26 @@ cg-board square.move-dest {
 cg-board square.premove-dest {
   background: radial-gradient(rgba(20, 30, 85, 0.5) 22%, #203085 0, rgba(0, 0, 0, 0.3) 0, rgba(0, 0, 0, 0) 0);
 }
+cg-board square.inspect-dest {
+  background: radial-gradient(rgba(90, 20, 95, 0.5) 22%, #5a145f 0, rgba(0, 0, 0, 0.3) 0, rgba(0, 0, 0, 0) 0);
+}
 cg-board square.oc.move-dest {
   background: radial-gradient(transparent 0%, transparent 80%, rgba(20, 85, 0, 0.3) 80%);
 }
 cg-board square.oc.premove-dest {
   background: radial-gradient(transparent 0%, transparent 80%, rgba(20, 30, 85, 0.2) 80%);
 }
+cg-board square.oc.inspect-dest {
+  background: radial-gradient(transparent 0%, transparent 80%, rgba(90, 20, 95, 0.2) 80%);
+}
 cg-board square.move-dest:hover {
   background: rgba(20, 85, 30, 0.3);
 }
 cg-board square.premove-dest:hover {
   background: rgba(20, 30, 85, 0.2);
+}
+cg-board square.inspect-dest:hover {
+  background: rgba(90, 20, 95, 0.2);
 }
 cg-board square.last-move {
   background-color: rgba(155, 199, 0, 0.41);

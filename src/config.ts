@@ -53,6 +53,9 @@ export interface Config {
       unset?: () => void; // called after the premove has been unset
     };
   };
+  inspectable?: {
+    enabled?: boolean; // allow viewing potential-move dests for pieces that can not move (e.g. the opponent's)
+  };
   predroppable?: {
     enabled?: boolean; // allow predrops for color that can not move
     events?: {

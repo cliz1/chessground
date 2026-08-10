@@ -271,12 +271,14 @@ const king: Mobility = (ctx: MobilityContext) =>
 
 const mobilityByRole = { pawn, knight, bishop, rook, queen, champion, princess, amazon, king, mann, painter, snare, wizard, archer, royalpainter, rollingsnare };
 
-export function premove(state: HeadlessState, key: cg.Key): cg.Key[] {
+export function premove(state: HeadlessState, key: cg.Key, opts?: { ignoreTurn?: boolean }): cg.Key[] {
   const pieces = state.pieces,
     canCastle = state.premovable.castle,
     unrestrictedPremoves = !!state.premovable.unrestrictedPremoves;
   const piece = pieces.get(key);
-  if (!piece || piece.color === state.turnColor) return [];
+  // Normal premoving only makes sense for a piece that doesn't have the move right now.
+  // Inspection (opts.ignoreTurn) wants the same shape-based mobility regardless of whose turn it is.
+  if (!piece || (!opts?.ignoreTurn && piece.color === state.turnColor)) return [];
   const color = piece.color,
     friendlies = new Map([...pieces].filter(([_, p]) => p.color === color)),
     enemies = new Map([...pieces].filter(([_, p]) => p.color === util.opposite(color))),

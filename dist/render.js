@@ -197,6 +197,11 @@ function computeSquareClasses(s) {
                 for (const k of pDests) {
                     addSquare(squares, k, 'premove-dest' + (s.pieces.has(k) ? ' oc' : ''));
                 }
+            const iDests = s.inspectable.dests;
+            if (iDests)
+                for (const k of iDests) {
+                    addSquare(squares, k, 'inspect-dest' + (s.pieces.has(k) ? ' oc' : ''));
+                }
         }
     }
     const premove = s.premovable.current;

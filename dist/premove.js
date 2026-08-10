@@ -174,10 +174,12 @@ const king = (ctx) => (util.kingDirNonCastling(...ctx.pos1, ...ctx.pos2) &&
                 .map(s => ctx.allPieces.get(s))
                 .every(p => !p || util.samePiece(p, { role: 'rook', color: ctx.color }))));
 const mobilityByRole = { pawn, knight, bishop, rook, queen, champion, princess, amazon, king, mann, painter, snare, wizard, archer, royalpainter, rollingsnare };
-export function premove(state, key) {
+export function premove(state, key, opts) {
     const pieces = state.pieces, canCastle = state.premovable.castle, unrestrictedPremoves = !!state.premovable.unrestrictedPremoves;
     const piece = pieces.get(key);
-    if (!piece || piece.color === state.turnColor)
+    // Normal premoving only makes sense for a piece that doesn't have the move right now.
+    // Inspection (opts.ignoreTurn) wants the same shape-based mobility regardless of whose turn it is.
+    if (!piece || (!opts?.ignoreTurn && piece.color === state.turnColor))
         return [];
     const color = piece.color, friendlies = new Map([...pieces].filter(([_, p]) => p.color === color)), enemies = new Map([...pieces].filter(([_, p]) => p.color === util.opposite(color))), pos = util.key2pos(key), mobility = mobilityByRole[piece.role], ctx = {
         pos1: pos,

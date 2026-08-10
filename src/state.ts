@@ -57,6 +57,10 @@ export interface HeadlessState {
       unset?: () => void; // called after the premove has been unset
     };
   };
+  inspectable: {
+    enabled: boolean; // allow viewing potential-move dests for pieces that can not move (e.g. the opponent's)
+    dests?: cg.Key[]; // inspected destinations for the current selection
+  };
   predroppable: {
     enabled: boolean; // allow predrops for color that can not move
     current?: {
@@ -144,6 +148,9 @@ export function defaults(): HeadlessState {
       showDests: true,
       castle: true,
       events: {},
+    },
+    inspectable: {
+      enabled: false,
     },
     predroppable: {
       enabled: false,
