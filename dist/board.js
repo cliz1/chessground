@@ -205,7 +205,10 @@ export function dropNewPiece(state, orig, dest, force) {
 export function selectSquare(state, key, force) {
     callUserFunction(state.events.select, key);
     if (state.selected) {
-        if (state.selected === key && !state.draggable.enabled) {
+        // Re-clicking the current selection deselects it. Pieces that are actually draggable
+        // rely on drag-end (see drag.ts) to do this instead, so only handle it here for
+        // selections that never get a drag-end at all — e.g. inspected (non-draggable) pieces.
+        if (state.selected === key && !isDraggable(state, key)) {
             unselect(state);
             state.hold.cancel();
             return;
