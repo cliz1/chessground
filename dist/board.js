@@ -73,7 +73,7 @@ function tryAutoCastle(state, orig, dest) {
             dest = pos2key([0, destPos[1]]);
     }
     const rook = state.pieces.get(dest);
-    if (!rook || rook.color !== king.color || rook.role !== 'rook')
+    if (!rook || rook.color !== king.color || (rook.role !== 'rook' && rook.role !== 'champion'))
         return false;
     state.pieces.delete(orig);
     state.pieces.delete(dest);
