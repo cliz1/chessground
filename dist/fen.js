@@ -18,7 +18,8 @@ const roles = {
     x: 'archer',
     o: 'royalpainter',
     l: 'rollingsnare',
-    u: 'centaur'
+    u: 'centaur',
+    g: 'general'
 };
 const letters = {
     pawn: 'p',
@@ -37,7 +38,8 @@ const letters = {
     archer: 'x',
     royalpainter: 'o',
     rollingsnare: 'l',
-    centaur: 'u'
+    centaur: 'u',
+    general: 'g'
 };
 export function read(fen) {
     if (fen === 'start')

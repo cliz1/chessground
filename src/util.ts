@@ -208,6 +208,14 @@ export function archerDir(x1: number, y1: number, x2: number, y2: number): boole
 export const centaurDir: cg.DirectionalCheck = (x1, y1, x2, y2) =>
   knightDir(x1, y1, x2, y2) || archerDir(x1, y1, x2, y2);
 
+// Wazir: one square orthogonally (no diagonals).
+export const wazirDir: cg.DirectionalCheck = (x1, y1, x2, y2) => diff(x1, x2) + diff(y1, y2) === 1;
+
+// General: moves/captures one square orthogonally, and additionally captures at range
+// along a rank or file like a rook (see rookDir; range-capture-only is enforced elsewhere).
+export const generalDir: cg.DirectionalCheck = (x1, y1, x2, y2) =>
+  wazirDir(x1, y1, x2, y2) || rookDir(x1, y1, x2, y2);
+
 /** Returns all board squares between (x1, y1) and (x2, y2) exclusive,
  *  along a straight line (rook or bishop path). Returns [] if not aligned, or none between.
  */

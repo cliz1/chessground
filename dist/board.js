@@ -28,7 +28,7 @@ export function setCheck(state, color) {
         color = state.turnColor;
     if (color)
         for (const [k, p] of state.pieces) {
-            if (p.role === 'king' && p.color === color) {
+            if ((p.role === 'king' || p.role === 'general') && p.color === color) {
                 state.check = k;
             }
         }

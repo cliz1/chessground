@@ -70,12 +70,13 @@ const isDestControlledByEnemy = (ctx: MobilityContext, pieceRolesExclude?: cg.Ro
         (piece.role == 'princess' && util.princessDir(...piecePos, ...square)) ||
         (piece.role === 'amazon' && util.amazonDir(...piecePos, ...square)) ||
         (piece.role === 'mann' && util.mannDir(...piecePos, ...square)) ||
-        (piece.role === 'wizard' && util.wizardDir(...piecePos, ...square)) || 
+        (piece.role === 'wizard' && util.wizardDir(...piecePos, ...square)) ||
+        (piece.role === 'general' && util.generalDir(...piecePos, ...square)) ||
         (piece.role === 'royalpainter' && util.queenDir(...piecePos, ...square)) ||
         (piece.role === 'rollingsnare' && util.queenDir(...piecePos, ...square)) ||
         (piece.role === 'snare' && util.snareDir(...piecePos, ...square, piece.color === 'white') &&!ctx.allPieces.has(util.pos2key(square))) ||
         (piece.role === 'king' && util.kingDirNonCastling(...piecePos, ...square))) &&
-      (!['bishop', 'rook', 'queen', 'champion', 'princess', 'rollingsnare'].includes(piece.role) || !anyPieceBetween(piecePos, square, ctx.allPieces))
+      (!['bishop', 'rook', 'queen', 'champion', 'princess', 'rollingsnare', 'general'].includes(piece.role) || !anyPieceBetween(piecePos, square, ctx.allPieces))
     );
   });
 };
@@ -254,6 +255,19 @@ const centaur: Mobility = (ctx: MobilityContext) =>
   (ctx.unrestrictedPremoves || !isDestOccupiedByFriendly(ctx) || isFriendlyOnDestAndAttacked(ctx));
 
 
+const general: Mobility = (ctx: MobilityContext) => {
+  if (util.wazirDir(...ctx.pos1, ...ctx.pos2)) {
+    return ctx.unrestrictedPremoves || !isDestOccupiedByFriendly(ctx) || isFriendlyOnDestAndAttacked(ctx);
+  }
+  // Ranged rook-style capture only: never a quiet slide, so the destination must
+  // (eventually) hold an enemy piece.
+  return (
+    util.rookDir(...ctx.pos1, ...ctx.pos2) &&
+    isPathClearEnoughForPremove(ctx) &&
+    (ctx.unrestrictedPremoves || isDestOccupiedByEnemy(ctx) || isFriendlyOnDestAndAttacked(ctx))
+  );
+};
+
 const king: Mobility = (ctx: MobilityContext) =>
   (util.kingDirNonCastling(...ctx.pos1, ...ctx.pos2) &&
     (ctx.unrestrictedPremoves || !isDestOccupiedByFriendly(ctx) || isFriendlyOnDestAndAttacked(ctx))) ||
@@ -273,7 +287,7 @@ const king: Mobility = (ctx: MobilityContext) =>
         .map(s => ctx.allPieces.get(s))
         .every(p => !p || util.samePiece(p, { role: 'rook', color: ctx.color }))));
 
-const mobilityByRole = { pawn, knight, bishop, rook, queen, champion, princess, amazon, king, mann, painter, snare, wizard, archer, royalpainter, rollingsnare, centaur };
+const mobilityByRole = { pawn, knight, bishop, rook, queen, champion, princess, amazon, king, mann, painter, snare, wizard, archer, royalpainter, rollingsnare, centaur, general };
 
 export function premove(state: HeadlessState, key: cg.Key, opts?: { ignoreTurn?: boolean }): cg.Key[] {
   const pieces = state.pieces,
