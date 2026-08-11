@@ -88,7 +88,7 @@ export type Unbind = () => void;
 export type Milliseconds = number;
 export type KHz = number;
 export declare const colors: readonly ["white", "black"];
-export declare const roles: readonly ["pawn", "knight", "bishop", "rook", "queen", "king", "champion", "princess", "amazon", "mann", "painter", "snare", "wizard", "archer", "royalpainter", "rollingsnare"];
+export declare const roles: readonly ["pawn", "knight", "bishop", "rook", "queen", "king", "champion", "princess", "amazon", "mann", "painter", "snare", "wizard", "archer", "royalpainter", "rollingsnare", "centaur"];
 export declare const files: readonly ["a", "b", "c", "d", "e", "f", "g", "h"];
 export declare const ranks: readonly ["1", "2", "3", "4", "5", "6", "7", "8"];
 export type RanksPosition = 'left' | 'right';

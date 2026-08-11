@@ -156,6 +156,8 @@ const wizard = (ctx) => util.wizardDir(...ctx.pos1, ...ctx.pos2) &&
 const archer = (ctx) => util.archerDir(...ctx.pos1, ...ctx.pos2) &&
     isPathClearEnoughForPremove(ctx) && // should always true for 1-step
     (ctx.unrestrictedPremoves || !isDestOccupiedByFriendly(ctx) || isFriendlyOnDestAndAttacked(ctx));
+const centaur = (ctx) => util.centaurDir(...ctx.pos1, ...ctx.pos2) &&
+    (ctx.unrestrictedPremoves || !isDestOccupiedByFriendly(ctx) || isFriendlyOnDestAndAttacked(ctx));
 const king = (ctx) => (util.kingDirNonCastling(...ctx.pos1, ...ctx.pos2) &&
     (ctx.unrestrictedPremoves || !isDestOccupiedByFriendly(ctx) || isFriendlyOnDestAndAttacked(ctx))) ||
     (ctx.canCastle &&
@@ -173,7 +175,7 @@ const king = (ctx) => (util.kingDirNonCastling(...ctx.pos1, ...ctx.pos2) &&
                 .squaresBetween(...ctx.pos1, ctx.pos2[0] > ctx.pos1[0] ? 7 : 1, ctx.pos2[1])
                 .map(s => ctx.allPieces.get(s))
                 .every(p => !p || util.samePiece(p, { role: 'rook', color: ctx.color }))));
-const mobilityByRole = { pawn, knight, bishop, rook, queen, champion, princess, amazon, king, mann, painter, snare, wizard, archer, royalpainter, rollingsnare };
+const mobilityByRole = { pawn, knight, bishop, rook, queen, champion, princess, amazon, king, mann, painter, snare, wizard, archer, royalpainter, rollingsnare, centaur };
 export function premove(state, key, opts) {
     const pieces = state.pieces, canCastle = state.premovable.castle, unrestrictedPremoves = !!state.premovable.unrestrictedPremoves;
     const piece = pieces.get(key);

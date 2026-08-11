@@ -135,6 +135,8 @@ export const wizardDir = (x1, y1, x2, y2) => {
 export function archerDir(x1, y1, x2, y2) {
     return Math.abs(x2 - x1) === 1 && Math.abs(y2 - y1) === 1;
 }
+// Centaur: moves/captures like a knight, and additionally shoots like an archer (see archerDir).
+export const centaurDir = (x1, y1, x2, y2) => knightDir(x1, y1, x2, y2) || archerDir(x1, y1, x2, y2);
 /** Returns all board squares between (x1, y1) and (x2, y2) exclusive,
  *  along a straight line (rook or bishop path). Returns [] if not aligned, or none between.
  */

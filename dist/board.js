@@ -95,9 +95,9 @@ export function baseMove(state, orig, dest) {
     if (dest === state.selected)
         unselect(state);
     callUserFunction(state.events.move, orig, dest, captured);
-    // --- special-case: archer capture that SHOULD NOT move the archer piece visually ---
-    // detect archer special-capture: diagonal > 1 and destination contains enemy piece
-    if (origPiece.role === 'archer' &&
+    // --- special-case: archer/centaur capture that SHOULD NOT move the piece visually ---
+    // detect archer-style special-capture: diagonal > 1 and destination contains enemy piece
+    if ((origPiece.role === 'archer' || origPiece.role === 'centaur') &&
         captured &&
         (() => {
             const o = key2pos(orig);

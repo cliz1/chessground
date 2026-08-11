@@ -245,8 +245,12 @@ const wizard: Mobility = (ctx: MobilityContext) =>
 
 
 const archer: Mobility = (ctx: MobilityContext) =>
-  util.archerDir(...ctx.pos1, ...ctx.pos2) && 
+  util.archerDir(...ctx.pos1, ...ctx.pos2) &&
   isPathClearEnoughForPremove(ctx) && // should always true for 1-step
+  (ctx.unrestrictedPremoves || !isDestOccupiedByFriendly(ctx) || isFriendlyOnDestAndAttacked(ctx));
+
+const centaur: Mobility = (ctx: MobilityContext) =>
+  util.centaurDir(...ctx.pos1, ...ctx.pos2) &&
   (ctx.unrestrictedPremoves || !isDestOccupiedByFriendly(ctx) || isFriendlyOnDestAndAttacked(ctx));
 
 
@@ -269,7 +273,7 @@ const king: Mobility = (ctx: MobilityContext) =>
         .map(s => ctx.allPieces.get(s))
         .every(p => !p || util.samePiece(p, { role: 'rook', color: ctx.color }))));
 
-const mobilityByRole = { pawn, knight, bishop, rook, queen, champion, princess, amazon, king, mann, painter, snare, wizard, archer, royalpainter, rollingsnare };
+const mobilityByRole = { pawn, knight, bishop, rook, queen, champion, princess, amazon, king, mann, painter, snare, wizard, archer, royalpainter, rollingsnare, centaur };
 
 export function premove(state: HeadlessState, key: cg.Key, opts?: { ignoreTurn?: boolean }): cg.Key[] {
   const pieces = state.pieces,

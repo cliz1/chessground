@@ -37,6 +37,7 @@ export declare function snareDir(x1: number, y1: number, x2: number, y2: number)
 export declare function snareDir(x1: number, y1: number, x2: number, y2: number, isDirectionUp: boolean, ...rest: any[]): boolean;
 export declare const wizardDir: cg.DirectionalCheck;
 export declare function archerDir(x1: number, y1: number, x2: number, y2: number): boolean;
+export declare const centaurDir: cg.DirectionalCheck;
 /** Returns all board squares between (x1, y1) and (x2, y2) exclusive,
  *  along a straight line (rook or bishop path). Returns [] if not aligned, or none between.
  */
